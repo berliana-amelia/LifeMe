@@ -35,28 +35,59 @@ import { PieChart } from "react-native-chart-kit";
 
 const Finance = ({ navigation }) => {
   const getCostByMonth = async () => {
-    // getIncomeByMonth();
     const x = [];
     const q = query(collection(db, "Pengeluaran"), where("email", "==", email));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       const month = doc.data().tanggal.substring(0, 2);
       const year = doc.data().tanggal.substring(6, 8);
-      console.log();
       x.push({
+        tanggal : doc.data().tanggal,
+        kategori : doc.data().kategori,
         jumlah: parseInt(doc.data().jumlah),
         month: month,
         year: year,
         key: doc.id,
       });
     });
-    const t = x.filter((items) => items.month == monthf);
-    const y = t.filter((items) => items.year == yearf);
-    // console.log(t);
-    const sum = 0;
-    sum = y.map((tot) => tot.jumlah).reduce((a, b) => a + b);
-    console.log(sum);
-    setCost1(sum);
+    if (x.length != 0) {
+      const y = x.filter(
+        (items) => items.month == monthf && items.year == yearf
+      );
+      // console.log("ini y", y);
+      if (y.length != 0) {
+        var sum = y.map((tot) => tot.jumlah).reduce((a, b) => a + b);
+        setCost1(sum);
+        const p = y.filter((items) => items.kategori == 'Primer');
+        const s = y.filter((items) => items.kategori == 'Sekunder');
+        const t = y.filter((items) => items.kategori == 'Tersier');
+        console.log(p,s,t,primer,sekunder)
+        if (p.length !=0){
+          var sum = p.map((tot) => tot.jumlah).reduce((a, b) => a + b);
+          setPrimer(sum);
+        }else{
+          setPrimer(0)
+          console.log('prim', primer)
+        }if (s.length !=0){
+          var sum = s.map((tot) => tot.jumlah).reduce((a, b) => a + b);
+          setSekunder(sum);
+        }else{
+          setSekunder(0)
+        }if (t.length !=0){
+          var sum = t.map((tot) => tot.jumlah).reduce((a, b) => a + b);
+          setTersier(sum);
+        }else{
+          console.log("Hallo")
+          setTersier(0)
+        }
+      } else {
+        setCost1(0);
+        setPrimer(0);
+        setSekunder(0);
+        setTersier(0);
+      }
+      // console.log(cost1);
+    }
   };
 
   const getIncomeByMonth = async () => {
@@ -73,13 +104,21 @@ const Finance = ({ navigation }) => {
         key: doc.id,
       });
     });
-    const t = x.filter((items) => items.month == monthf);
-    const y = t.filter((items) => items.year == yearf);
-    // console.log(t);
-    const sum = y.map((tot) => tot.jumlah).reduce((a, b) => a + b);
-    console.log(sum);
-    setIncome1(sum);
-  };
+    if (x.length != 0) {
+      const y = x.filter(
+        (items) => items.month == monthf && items.year == yearf
+      );
+      // console.log("ini y", y);
+      if (y.length != 0) {
+        var sum = y.map((tot) => tot.jumlah).reduce((a, b) => a + b);
+        setIncome1(sum);
+      } else {
+        setIncome1(0);
+      }
+      // console.log(income1);
+    }
+  };
+
 
   const getCost = async () => {
     const x = [];
@@ -113,13 +152,6 @@ const Finance = ({ navigation }) => {
   let email = auth.currentUser.email;
 
   const getData = async () => {
-    // ambil data use query
-    // const q = query(collection(db, "Finance"), where("email", "==", email));
-    // const querySnapshot = await getDocs(q);
-    // querySnapshot.forEach((doc) => {
-    //   setSaldo(doc.data().saldo)
-    // });
-
     const docRef = doc(db, "Finance", email);
     const docSnap = await getDoc(docRef);
 
@@ -137,30 +169,6 @@ const Finance = ({ navigation }) => {
     getIncomeByMonth();
   }, []);
 
-  const data = [
-    {
-      name: "Primer",
-      population: 100,
-      color: "rgba(131, 167, 234, 1)",
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 15,
-    },
-    {
-      name: "Sekunder",
-      population: 200,
-      color: "#F00",
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 15,
-    },
-    {
-      name: "Tersier",
-      population: 150,
-      color: "rgb(0, 0, 255)",
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 15,
-    },
-  ];
-
   const [fontsLoaded] = useFonts({
     Poppins_700Bold,
     Poppins_400Regular,
@@ -175,6 +183,9 @@ const Finance = ({ navigation }) => {
   const [income, setIncome] = React.useState(0);
   const [cost1, setCost1] = React.useState(0);
   const [income1, setIncome1] = React.useState(0);
+  const [primer, setPrimer] = React.useState(0);
+  const [sekunder, setSekunder] = React.useState(0);
+  const [tersier,setTersier] = React.useState(0);
 
   return fontsLoaded ? (
     <Box flex={1}>
@@ -361,6 +372,7 @@ const Finance = ({ navigation }) => {
                 mt={1}
                 onValueChange={(itemValue) => setYearf(itemValue)}
               >
+                <Select.Item label="2022" value="22" />
                 <Select.Item label="2023" value="23" />
               </Select>
               <Select
@@ -453,7 +465,29 @@ const Finance = ({ navigation }) => {
             pt={"5%"}
           >
             <PieChart
-              data={data}
+              data={[
+                {
+                  name: "Primer",
+                  population: primer,
+                  color: "rgba(131, 167, 234, 1)",
+                  legendFontColor: "#7F7F7F",
+                  legendFontSize: 15,
+                },
+                {
+                  name: "Sekunder",
+                  population: sekunder,
+                  color: "#F00",
+                  legendFontColor: "#7F7F7F",
+                  legendFontSize: 15,
+                },
+                {
+                  name: "Tersier",
+                  population: tersier,
+                  color: "rgb(0, 0, 255)",
+                  legendFontColor: "#7F7F7F",
+                  legendFontSize: 15,
+                },
+              ]}
               width={320}
               height={200}
               chartConfig={{
