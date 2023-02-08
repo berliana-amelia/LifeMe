@@ -42,8 +42,13 @@ const Finance = ({ navigation }) => {
       const month = doc.data().tanggal.substring(0, 2);
       const year = doc.data().tanggal.substring(6, 8);
       x.push({
+<<<<<<< HEAD
         tanggal : doc.data().tanggal,
         kategori : doc.data().kategori,
+=======
+        tanggal: doc.data().tanggal,
+        kategori: doc.data().kategori,
+>>>>>>> 9aa57549a11a1adb092775f577e3b515fb9b456a
         jumlah: parseInt(doc.data().jumlah),
         month: month,
         year: year,
@@ -58,6 +63,7 @@ const Finance = ({ navigation }) => {
       if (y.length != 0) {
         var sum = y.map((tot) => tot.jumlah).reduce((a, b) => a + b);
         setCost1(sum);
+<<<<<<< HEAD
         const p = y.filter((items) => items.kategori == 'Primer');
         const s = y.filter((items) => items.kategori == 'Sekunder');
         const t = y.filter((items) => items.kategori == 'Tersier');
@@ -79,6 +85,31 @@ const Finance = ({ navigation }) => {
         }else{
           console.log("Hallo")
           setTersier(0)
+=======
+        const p = y.filter((items) => items.kategori == "Primer");
+        const s = y.filter((items) => items.kategori == "Sekunder");
+        const t = y.filter((items) => items.kategori == "Tersier");
+        // console.log(p, s, t, primer, sekunder);
+        if (p.length != 0) {
+          var sum = p.map((tot) => tot.jumlah).reduce((a, b) => a + b);
+          setPrimer(sum);
+        } else {
+          setPrimer(0);
+          // console.log("prim", primer);
+        }
+        if (s.length != 0) {
+          var sum = s.map((tot) => tot.jumlah).reduce((a, b) => a + b);
+          setSekunder(sum);
+        } else {
+          setSekunder(0);
+        }
+        if (t.length != 0) {
+          var sum = t.map((tot) => tot.jumlah).reduce((a, b) => a + b);
+          setTersier(sum);
+        } else {
+          // console.log("Hallo");
+          setTersier(0);
+>>>>>>> 9aa57549a11a1adb092775f577e3b515fb9b456a
         }
       } else {
         setCost1(0);
@@ -116,37 +147,42 @@ const Finance = ({ navigation }) => {
         setIncome1(0);
       }
       // console.log(income1);
+<<<<<<< HEAD
     }
   };
 
-
-  const getCost = async () => {
-    const x = [];
-    const q = query(collection(db, "Pengeluaran"), where("email", "==", email));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      const y = parseInt(doc.data().jumlah);
-      x.push({
-        y,
-      });
-    });
-    const sum = x.map((tot) => tot.y).reduce((a, b) => a + b);
-    setCost(sum);
+=======
+    }
   };
+>>>>>>> 9aa57549a11a1adb092775f577e3b515fb9b456a
 
-  const getIncome = async () => {
-    const x = [];
-    const q = query(collection(db, "Pemasukan"), where("email", "==", email));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      const y = parseInt(doc.data().jumlah);
-      x.push({
-        y,
-      });
-    });
-    const sum = x.map((tot) => tot.y).reduce((a, b) => a + b);
-    setIncome(sum);
-  };
+  // const getCost = async () => {
+  //   const x = [];
+  //   const q = query(collection(db, "Pengeluaran"), where("email", "==", email));
+  //   const querySnapshot = await getDocs(q);
+  //   querySnapshot.forEach((doc) => {
+  //     const y = parseInt(doc.data().jumlah);
+  //     x.push({
+  //       y,
+  //     });
+  //   });
+  //   const sum = x.map((tot) => tot.y).reduce((a, b) => a + b);
+  //   setCost(sum);
+  // };
+
+  // const getIncome = async () => {
+  //   const x = [];
+  //   const q = query(collection(db, "Pemasukan"), where("email", "==", email));
+  //   const querySnapshot = await getDocs(q);
+  //   querySnapshot.forEach((doc) => {
+  //     const y = parseInt(doc.data().jumlah);
+  //     x.push({
+  //       y,
+  //     });
+  //   });
+  //   const sum = x.map((tot) => tot.y).reduce((a, b) => a + b);
+  //   setIncome(sum);
+  // };
 
   const auth = getAuth(app);
   let email = auth.currentUser.email;
@@ -159,14 +195,51 @@ const Finance = ({ navigation }) => {
       setSaldo(docSnap.data().saldo);
     } else {
       console.log("No such document!");
-      console.log(email);
+      // console.log(email);
     }
   };
+
+  // const getPrimer = async () => {
+  //   const x = [];
+  //   const q = query(
+  //     collection(db, "Pengeluaran"),
+  //     where("email", "==", email)
+  //     // where("kategori", "==", "Primer")
+  //   );
+  //   const querySnapshot = await getDocs(q);
+  //   querySnapshot.forEach((doc) => {
+  //     const month = doc.data().tanggal.substring(0, 2);
+  //     const year = doc.data().tanggal.substring(6, 8);
+  //     const kat = doc.data().kategori;
+  //     x.push({
+  //       jumlah: parseInt(doc.data().jumlah),
+  //       month: month,
+  //       year: year,
+  //       kategori: kat,
+  //       key: doc.id,
+  //     });
+  //   });
+  //   if (x.length != 0) {
+  //     const y = x.filter(
+  //       (items) => items.month == monthf && items.year == yearf
+  //       // items.kategori == "Primer"
+  //     );
+  //     // console.log("ini y", y);
+  //     if (y.length != 0) {
+  //       var sum = y.map((tot) => tot.jumlah).reduce((a, b) => a + b);
+  //       setPrimer(sum);
+  //     } else {
+  //       setPrimer(0);
+  //     }
+  //   }
+  //   // console.log(primer);
+  // };
 
   useEffect(() => {
     getData();
     getCostByMonth();
     getIncomeByMonth();
+    // getPrimer();
   }, []);
 
   const [fontsLoaded] = useFonts({
@@ -179,6 +252,7 @@ const Finance = ({ navigation }) => {
   const [monthf, setMonthf] = useState("02");
   const [yearf, setYearf] = useState("23");
   const [saldo, setSaldo] = useState(0);
+<<<<<<< HEAD
   const [cost, setCost] = React.useState(0);
   const [income, setIncome] = React.useState(0);
   const [cost1, setCost1] = React.useState(0);
@@ -186,6 +260,13 @@ const Finance = ({ navigation }) => {
   const [primer, setPrimer] = React.useState(0);
   const [sekunder, setSekunder] = React.useState(0);
   const [tersier,setTersier] = React.useState(0);
+=======
+  const [cost1, setCost1] = useState(0);
+  const [income1, setIncome1] = useState(0);
+  const [primer, setPrimer] = useState(0);
+  const [sekunder, setSekunder] = useState(0);
+  const [tersier, setTersier] = useState(0);
+>>>>>>> 9aa57549a11a1adb092775f577e3b515fb9b456a
 
   return fontsLoaded ? (
     <Box flex={1}>
@@ -221,8 +302,8 @@ const Finance = ({ navigation }) => {
                 pb={"3px"}
                 onPress={() => {
                   getData();
-                  getCost();
-                  getIncome();
+                  getCostByMonth();
+                  getIncomeByMonth();
                 }}
                 backgroundColor="white"
                 w={"75px"}
@@ -257,18 +338,6 @@ const Finance = ({ navigation }) => {
             alignItems="center"
           >
             {/* tempat menu */}
-            {/* <Box w={"100%"} justifyContent={"space-between"} px="8%">
-              <Text fontFamily={"Poppins_600SemiBold"} fontSize="18px">
-                Menu
-              </Text>
-            </Box>
-            <Separator height={"3%"} />
-            <Box
-              h="1.5px"
-              w="90%"
-              backgroundColor="#000000"
-              opacity={0.1}
-            ></Box> */}
             <TittleComp judul={"Menu"} />
             <Separator height={"20px"} />
             <HStack justifyContent={"space-between"}>
@@ -389,7 +458,6 @@ const Finance = ({ navigation }) => {
                 mt={1}
                 onValueChange={(itemValue) => {
                   setMonthf(itemValue);
-                  // getCostByMonth(monthf);
                 }}
               >
                 <Select.Item label="Januari" value="01" />
